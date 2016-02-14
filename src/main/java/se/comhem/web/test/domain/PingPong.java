@@ -3,7 +3,7 @@ package se.comhem.web.test.domain;
 import java.io.Serializable;
 
 public class PingPong implements Serializable {
-
+    private static final long serialVersionUID = 1210149414674312727L;
     private String message;
     private String input;
 

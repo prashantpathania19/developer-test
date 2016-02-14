@@ -1,12 +1,16 @@
 package se.comhem.web.test.domain;
 
-public class MarvelHero implements Hero {
+import java.io.Serializable;
 
+public class MarvelHero implements Hero, Serializable {
+    private static final long serialVersionUID = -2544615669555295330L;
     private String name;
     private String weakness;
     private Gender gender;
 
-    public MarvelHero() { }
+    public MarvelHero() {
+        super();
+    }
 
     public MarvelHero(String name, String weakness, Gender gender) {
         this.name = name;
@@ -18,11 +22,23 @@ public class MarvelHero implements Hero {
         return name;
     }
 
-    public String getWeakness() {
-        return weakness;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Gender getGender() {
         return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getWeakness() {
+        return weakness;
+    }
+
+    public void setWeakness(String weakness) {
+        this.weakness = weakness;
     }
 }
