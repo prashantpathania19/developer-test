@@ -1,6 +1,7 @@
 package se.comhem.web.test.repositories;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -66,7 +67,11 @@ public class HeroFileBasedRepository implements HeroRepository {
      */
     public void save(Hero hero) {
         if (fileRepository.exists()) {
-            FileUtil.convertAndWriteJsonToFile(hero, fileRepository);
+            List<Hero> heroList = new ArrayList<>(heroMap.values());
+            heroList.add(hero);
+            FileUtil.clearFileContent(fileRepository);
+            FileUtil.convertAndWriteJsonToFile(heroList, fileRepository);
+            heroMap.put(heroMap.size(), hero);
         }
     }
 }

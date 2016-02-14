@@ -5,13 +5,19 @@ package se.comhem.web.test.util;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.logging.Logger;    
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.List;
+import java.util.logging.Logger;
+
+import se.comhem.web.test.domain.Hero;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * This class is utility class for
  * File operations
- * @author prashantpathania
+ * @author Prashant Pathania
  *
  */
 public class FileUtil {
@@ -51,12 +57,30 @@ public class FileUtil {
      * @param object - a data holding object
      * @param targetFile - represents file to write
      */
-    public static void convertAndWriteJsonToFile(Object object, File targetFile) {
+    public static void convertAndWriteJsonToFile(List<Hero> heroList, File targetFile) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(targetFile, object);
+            objectMapper.writeValue(targetFile, heroList);
         } catch (Exception ex) {
             logger.warning("Error writing json to file " + ex.getMessage());
+        }
+    }
+
+    /**
+     * This method clears the content of the file
+     * @param targetFile - refers to the file path
+     */
+    public static void clearFileContent(File targetFile) {
+        PrintWriter writer = null;
+        try {
+            writer = new PrintWriter(targetFile);
+            writer.print("");
+        } catch (Exception ex) {
+            logger.warning("Error writing json to file " + ex.getMessage());
+        } finally {
+            if (writer != null) {
+                writer.close();
+            }
         }
     }
 }
