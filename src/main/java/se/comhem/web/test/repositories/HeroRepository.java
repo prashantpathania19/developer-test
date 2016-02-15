@@ -1,7 +1,8 @@
 package se.comhem.web.test.repositories;
 
 import se.comhem.web.test.domain.Hero;
-
+import se.comhem.web.test.exception.SaveHeroException;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -27,6 +28,8 @@ public interface HeroRepository {
     /**
      * This method saves hero object 
      * @param hero - object representing hero entity
+     * @throws IOException 
+     * @throws SaveHeroException 
      */
-    void save(Hero hero);
+    void save(Hero hero) throws SaveHeroException;
 }

@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import se.comhem.web.test.domain.Gender;
 import se.comhem.web.test.domain.Hero;
 import se.comhem.web.test.domain.MarvelHero;
+import se.comhem.web.test.exception.SaveHeroException;
 import se.comhem.web.test.services.HeroService;
 
 import java.util.Map;
@@ -25,25 +26,27 @@ public class HeroController {
     HeroService heroService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<Map<Integer,Hero>> listHeroes() {
-
-        return new ResponseEntity<Map<Integer,Hero>>(heroService.list(), HttpStatus.OK);
-
+    public ResponseEntity<?> listHeroes() {
+        Map<Integer, Hero> heroMap = heroService.list();
+        if (heroMap != null && !heroMap.isEmpty()) {
+            return new ResponseEntity<Map<Integer,Hero>>(heroService.list(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<String>("Heroes are not defined", HttpStatus.OK);
+        }
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public ResponseEntity<Hero> getHero(@PathVariable String id) {
-
+    public ResponseEntity<?> getHero(@PathVariable String id) {
         try {
-
-            return new ResponseEntity<Hero>(heroService.get(Integer.parseInt(id)), HttpStatus.OK);
-
+            Hero hero = heroService.get(Integer.valueOf(id));
+            if (hero != null) {
+                return new ResponseEntity<Hero>(hero, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<String>("Hero Not Found", HttpStatus.BAD_REQUEST);
+            }
         } catch (NumberFormatException nfe) {
-
-            return new ResponseEntity<Hero>(new MarvelHero(),HttpStatus.BAD_REQUEST);
-
+            return new ResponseEntity<Hero>(new MarvelHero(), HttpStatus.BAD_REQUEST);
         }
-
     }
 
     
@@ -57,6 +60,7 @@ public class HeroController {
     @RequestMapping(method = RequestMethod.POST, value = "/saveHero")
     public ResponseEntity<String> saveHero(@RequestParam(required=true) String name, @RequestParam(required=true) String weakness,
             @RequestParam(required=true) String gender) {
+        try {
         Gender genderEnum = Gender.getGenderByName(gender);
         if (genderEnum == null) {
             return new ResponseEntity<String>("Please provide valid Gender", HttpStatus.OK);
@@ -64,5 +68,8 @@ public class HeroController {
         Hero hero = new MarvelHero(name, weakness, genderEnum);
         heroService.save(hero);
         return new ResponseEntity<String>("Success", HttpStatus.OK);
+        } catch (SaveHeroException sue) {
+            return new ResponseEntity<String>("Problem in Saving Hero", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

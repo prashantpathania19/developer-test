@@ -5,12 +5,12 @@ package se.comhem.web.test.util;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.logging.Logger;
-
 import se.comhem.web.test.domain.Hero;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -36,16 +36,20 @@ public class FileUtil {
      * @param file - represents the file object
      * @return - string data from file
      */
-    public static String getFileContent(File file) {
+    public static String getFileContent(File file) throws FileNotFoundException, IOException {
         StringBuilder fileContent = new StringBuilder();
-        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
             int content;
             while ((content = fileInputStream.read()) != -1) {
                 // convert to char and display it
                 fileContent.append((char) content);
             }
-        } catch (Exception ex) {
-            logger.warning("Error reading file: " + ex.getMessage());
+        } finally {
+            if (fileInputStream != null) {
+                fileInputStream.close();
+            }
         }
         return fileContent.toString();
     }
@@ -56,26 +60,20 @@ public class FileUtil {
      * @param object - a data holding object
      * @param targetFile - represents file to write
      */
-    public static void convertAndWriteJsonToFile(List<Hero> heroList, File targetFile) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(targetFile, heroList);
-        } catch (Exception ex) {
-            logger.warning("Error writing json to file " + ex.getMessage());
-        }
+    public static void convertAndWriteJsonToFile(List<Hero> heroList, File targetFile) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValue(targetFile, heroList);
     }
 
     /**
      * This method clears the content of the file
      * @param targetFile - refers to the file path
      */
-    public static void clearFileContent(File targetFile) {
+    public static void clearFileContent(File targetFile) throws IOException {
         PrintWriter writer = null;
         try {
             writer = new PrintWriter(targetFile);
             writer.print("");
-        } catch (Exception ex) {
-            logger.warning("Error writing json to file " + ex.getMessage());
         } finally {
             if (writer != null) {
                 writer.close();

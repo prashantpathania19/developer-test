@@ -1,6 +1,7 @@
 package se.comhem.web.test.repositories;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import se.comhem.web.test.domain.Hero;
 import se.comhem.web.test.domain.MarvelHero;
+import se.comhem.web.test.exception.SaveHeroException;
 import se.comhem.web.test.util.FileProperties;
 import se.comhem.web.test.util.FileUtil;
 
@@ -40,6 +42,8 @@ public class HeroFileBasedRepository implements HeroRepository {
             } catch (Exception ex) {
                 logger.warning("error in converting data into entity list: " + ex.getMessage());
             }
+        } else {
+            logger.warning("Heroes Json file is missing. Please provide the correct heroes file json path");
         }
 
         if (heroList != null && !heroList.isEmpty()) {
@@ -66,13 +70,17 @@ public class HeroFileBasedRepository implements HeroRepository {
     /* (non-Javadoc)
      * @see se.comhem.web.test.repositories.HeroRepository#save(se.comhem.web.test.domain.Hero)
      */
-    public void save(Hero hero) {
+    public void save(Hero hero) throws SaveHeroException {
         if (fileRepository.exists()) {
-            List<Hero> heroList = new ArrayList<>(heroMap.values());
-            heroList.add(hero);
-            FileUtil.clearFileContent(fileRepository);
-            FileUtil.convertAndWriteJsonToFile(heroList, fileRepository);
-            heroMap.put(heroMap.size(), hero);
+            try {
+                List<Hero> heroList = new ArrayList<>(heroMap.values());
+                heroList.add(hero);
+                FileUtil.clearFileContent(fileRepository);
+                FileUtil.convertAndWriteJsonToFile(heroList, fileRepository);
+                heroMap.put(heroMap.size(), hero);
+            } catch (IOException io) {
+                throw new SaveHeroException("Problem saving Hero ", io);
+            }
         }
     }
 }
