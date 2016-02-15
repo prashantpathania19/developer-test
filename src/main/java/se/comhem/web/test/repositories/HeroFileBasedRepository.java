@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import se.comhem.web.test.domain.Hero;
+import se.comhem.web.test.domain.MarvelHero;
 import se.comhem.web.test.util.FileProperties;
 import se.comhem.web.test.util.FileUtil;
 
@@ -35,7 +36,7 @@ public class HeroFileBasedRepository implements HeroRepository {
             try {
             ObjectMapper objectMapper = new ObjectMapper();
             heroList = objectMapper.readValue(FileUtil.getFileContent(fileRepository), objectMapper.getTypeFactory().
-                    constructCollectionType(List.class, Hero.class));
+                    constructCollectionType(List.class, MarvelHero.class));
             } catch (Exception ex) {
                 logger.warning("error in converting data into entity list: " + ex.getMessage());
             }
