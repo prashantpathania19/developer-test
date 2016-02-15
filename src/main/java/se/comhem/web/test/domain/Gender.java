@@ -24,7 +24,7 @@ public enum Gender {
     public static Gender getGenderByName(String name) {
         Gender gender = null;
         for (Gender type : values()) {
-            if (type.name().equals(name)) {
+            if (type.getName().equals(name)) {
                 gender = type;
             }
         }
