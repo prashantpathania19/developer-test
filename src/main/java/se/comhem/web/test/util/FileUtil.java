@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.logging.Logger;
 import se.comhem.web.test.domain.Hero;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -20,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  *
  */
 public class FileUtil {
-    private static Logger logger = Logger.getLogger(FileUtil.class.getName());
     /**
      * Method to return file object
      * @param filePath - refers to filePath
