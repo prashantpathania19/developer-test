@@ -1,5 +1,6 @@
 package se.comhem.web.test;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -8,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import se.comhem.web.test.controllers.PongController;
-
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -16,11 +16,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 public class PingPongIntegrationTest {
-
-    MockMvc mockMvc;
-
     @InjectMocks
     PongController controller;
+    MockMvc mockMvc;
 
     @Before
     public void setup() {
@@ -31,17 +29,19 @@ public class PingPongIntegrationTest {
     @Test
     public void thatPongIsResponded() {
         try {
-
             this.mockMvc.perform(get("/ping").accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType("application/json;charset=UTF-8"))
                     .andExpect(content().string("\"pong\""));
 
         } catch(Exception e) {
-
             fail("Exception: " + e.fillInStackTrace());
-
         }
     }
 
+    @After
+    public void tearDown() {
+        mockMvc = null;
+        controller = null;
+    }
 }
