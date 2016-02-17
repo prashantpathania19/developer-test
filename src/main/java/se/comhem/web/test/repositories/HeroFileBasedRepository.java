@@ -36,14 +36,14 @@ public class HeroFileBasedRepository implements HeroRepository {
         //read file and convert data
         if (fileRepository.exists()) {
             try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            heroList = objectMapper.readValue(FileUtil.getFileContent(fileRepository), objectMapper.getTypeFactory().
-                    constructCollectionType(List.class, MarvelHero.class));
+                ObjectMapper objectMapper = new ObjectMapper();
+                heroList = objectMapper.readValue(FileUtil.getFileContent(fileRepository), objectMapper.getTypeFactory().
+                        constructCollectionType(List.class, MarvelHero.class));
             } catch (Exception ex) {
-                logger.warning("error in converting data into entity list: " + ex.getMessage());
+                logger.severe("error in converting data into entity list: " + ex.getMessage());
             }
         } else {
-            logger.warning("Heroes Json file is missing. Please provide the correct heroes file json path");
+            logger.severe("Heroes Json file is missing. Please provide the correct heroes file json path");
         }
 
         if (heroList != null && !heroList.isEmpty()) {
