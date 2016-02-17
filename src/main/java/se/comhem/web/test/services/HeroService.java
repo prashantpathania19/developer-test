@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import se.comhem.web.test.domain.Hero;
 import se.comhem.web.test.exception.SaveHeroException;
 import se.comhem.web.test.repositories.HeroRepository;
-import java.io.IOException;
 import java.util.Map;
 
 @Service
